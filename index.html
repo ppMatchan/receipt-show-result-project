@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Receipt Result</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0"></script>
+  
+</head>
+<body>
+  <h1>Receipt Summary</h1>
+  <div class="filter-bar">
+  <label> 年
+    <select id="yearSelect"></select>
+  </label>
+  <label> 月
+    <select id="monthSelect"></select>
+  </label>
+
+  <button id="loadButton" onclick="loadResults();">表示</button>
+</div>
+  <div style="width: 700px;" class="chart-container"> 
+    <div id="noDataMessage" class="no-data" style="display: none;">
+      この月のデータはありません
+    </div>
+    <canvas id="myChart" style="width:100%;"></canvas>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

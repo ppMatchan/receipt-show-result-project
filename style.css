@@ -1,0 +1,42 @@
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.filter-bar label {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: #555;
+}
+
+.filter-bar select,
+.filter-bar button {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: white;
+  font-size: 15px;
+}
+
+.filter-bar button {
+  cursor: pointer;
+  background: #333;
+  color: white;
+}
+
+.no-data {
+  text-align: center;
+  margin: 40px 0;
+  color: #777;
+  font-size: 18px;
+}
+
+.chart-container {
+  position: relative;
+  margin: auto;
+  justify-content: center;
+}
