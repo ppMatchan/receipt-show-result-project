@@ -5,6 +5,17 @@ let categoryChart = null;
 
 let appConfig = null;
 
+const categoryColors = {
+    food: "#0066ff",          // 青い
+    daily_goods: "#FF66FF",   // ピンク
+    health_care: "#FF9900",    // オレンジ
+    drink: "#00BCD4",         // 水色
+    transportation: "#9C27B0",// 紫
+    entertainment: "#E91E63", // 赤
+    unknown: "#9E9E9E"        // グレー
+};
+
+///* config.json から設定を読み込む */
 async function loadConfig() {
     const response = await fetch("./config.json");
 
@@ -16,13 +27,13 @@ async function loadConfig() {
 }
 
 
-///* ฟังก์ชันสำหรับตั้งค่าเลือกปีและเดือน */
+///* 年、月のセレクターを設定 */
 function setupDateSelectors() {
     const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth() + 1;
 
-    // ปี: ย้อนหลัง 5 ปี ถึงปีปัจจุบัน
+    // 年: 現在の年から過去5年分を表示
     for (let year = currentYear; year >= currentYear - 5; year--) {
     const option = document.createElement("option");
     option.value = year;
@@ -30,7 +41,7 @@ function setupDateSelectors() {
     yearSelect.appendChild(option);
     }
 
-    // เดือน 1-12
+    // 月: 1-12
     for (let month = 1; month <= 12; month++) {
     const option = document.createElement("option");
     option.value = String(month).padStart(2, "0");
@@ -38,11 +49,12 @@ function setupDateSelectors() {
     monthSelect.appendChild(option);
     }
 
+    // デフォルトは現在の年月
     yearSelect.value = currentYear;
     monthSelect.value = String(currentMonth).padStart(2, "0");
 }
 
-///* ฟังก์ชันสำหรับโหลดข้อมูลและแสดงผลกราฟ */
+///* 結果を取得して、表示 */
 async function loadResults() {
 
     const year = yearSelect.value;    
@@ -57,8 +69,8 @@ async function loadResults() {
 
 
     if (!response.ok) {
-    showNoData();
-    return;
+        showNoData();
+        return;
     }
 
     const data = await response.json();
@@ -66,12 +78,13 @@ async function loadResults() {
     console.log(data);
 
     if (!data.categories || data.categories.length === 0) {
-    showNoData();
-    return;
+        showNoData();
+        return;
     }
-    
+    // データがない場合 "データがありません" を表示
     hideNoData();
 
+    // 円グラフのデータを準備
     const categories = data.categories;      
 
     const labels = categories.map(item => item.category_name);
@@ -80,11 +93,13 @@ async function loadResults() {
 
     const sum = values.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
+    // 既にチャートが表示されている場合は、古いチャートを破棄してから新しいチャートを作成
     if (categoryChart) {
-    categoryChart.destroy();          
-    categoryChart = null;
+        categoryChart.destroy();          
+        categoryChart = null;
     }
 
+    // Chart.js を使って円グラフを描画
     categoryChart = new Chart(canvas, {
     type: "pie",
     data: {
@@ -108,20 +123,12 @@ async function loadResults() {
     
 }
 
-const categoryColors = {
-    food: "#0066ff",          // น้ำเงินเข้ม
-    daily_goods: "#FF66FF",   // น้ำเงินอมม่วง
-    health_care: "#FF9900",    // ส้ม
-    drink: "#00BCD4",         // ฟ้าอมเขียว
-    transportation: "#9C27B0",// ม่วง
-    entertainment: "#E91E63", // ชมพู
-    unknown: "#9E9E9E"        // เทา
-};
-
+///* カテゴリーIDに応じた色を返す */
 function getColorByCategoryId(categoryId) {
     return categoryColors[categoryId] || "#9E9E9E";
 }
 
+///* データがない場合の表示切替 */
 function showNoData() {
     const noDataMessage = document.getElementById("noDataMessage");
     const canvas = document.getElementById("myChart");
@@ -129,13 +136,14 @@ function showNoData() {
     noDataMessage.style.display = "block";
     canvas.style.display = "none";
 
-    // ถ้ามี chart เก่าอยู่ ให้ลบทิ้ง
+    // 既にチャートが表示されている場合は、古いチャートを破棄
     if (categoryChart !== null) {
-    categoryChart.destroy();
-    categoryChart = null;
+        categoryChart.destroy();
+        categoryChart = null;
     }
 }
 
+///* データがある場合の表示切替 */
 function hideNoData() {
     const noDataMessage = document.getElementById("noDataMessage");
     const canvas = document.getElementById("myChart");
@@ -144,6 +152,7 @@ function hideNoData() {
     canvas.style.display = "block";
 }
 
+///* 画面表示イベント */
 window.addEventListener("DOMContentLoaded", async () => {
     setupDateSelectors();
     await loadConfig();
