@@ -15,3 +15,6 @@ This application calls a Lambda API to retrieve monthly receipt summary data and
 * AWS Lambda
 * Amazon API Gateway
 * Amazon S3 Static Website Hosting
+
+## Summay Page Image
+> ./docs/screenshot-summary.png
